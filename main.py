@@ -17,6 +17,11 @@ class Sort:
         self.resolution = resolution
         self.display = display
         self.frameUnit = 20
+
+        self.x_list = []
+        self.x_1_list = []
+        self.endY = 0
+
         self.array = []
         self.mergesortArray = []
         self.bruteForceSortArray = []
@@ -28,14 +33,13 @@ class Sort:
         if len(array) > 1:
             middleListId = int(len(array)/2)
 
-            self.framesBuilder(1, array, startColumn)
-            pygame.display.update()
-            time.sleep(0.1)
+            self.populateFrames(1, array, startColumn)
+
             firstHalf = array[:middleListId]
             secondHalf = array[middleListId:]
 
             self.mergesort(firstHalf, startColumn)
-            self.mergesort(secondHalf, middleListId+startColumn)
+            self.mergesort(secondHalf, startColumn+middleListId)
 
             i, j, k = 0, 0, 0
             while i < len(firstHalf) and j < len(secondHalf):
@@ -57,8 +61,10 @@ class Sort:
                 j += 1
                 k += 1
 
-    def populateFrames(self, sort_f, startCol, array, x_list, endY, x_1_list):
+    def populateFrames(self, sort_f, array=[], startColumn=0):
         print("Apresentando a lista nos quadros...")
+
+        self.framesBuilder(sort_f if sort_f else sort_f + 1)
 
         if not sort_f or sort_f == 1:
             j = 0
@@ -66,7 +72,10 @@ class Sort:
             for i in self.array:
                 pygame.draw.rect(
                     self.display, colors[2],
-                    (x_list[j] + 1, endY - i * 20 + 1, 19, (i * 20) - 1)
+                    (
+                        self.x_list[j] + 1, self.endY - i * 20 + 1,
+                        19, (i * 20) - 1
+                    )
                 )
 
                 if not sort_f:
@@ -75,7 +84,10 @@ class Sort:
 
                 pygame.draw.rect(
                     self.display, colors[2],
-                    (x_1_list[j] + 1, endY - i * 20 + 1, 19, (i * 20) - 1)
+                    (
+                        self.x_1_list[j] + 1, self.endY - i * 20 + 1,
+                        19, (i * 20) - 1
+                    )
                 )
 
                 if not sort_f:
@@ -85,26 +97,28 @@ class Sort:
                 j = j + 1
 
         if sort_f == 1:
-            j = startCol
+            j = startColumn
 
             for i in array:
                 pygame.draw.rect(
                     self.display, colors[3],
-                    (x_list[j] + 1, endY - i * 20 + 1, 19, (i * 20) - 1)
+                    (
+                        self.x_list[j] + 1, self.endY - i * 20 + 1,
+                        19, (i * 20) - 1
+                    )
                 )
 
                 j = j + 1
 
             pygame.display.update()
-            time.sleep(0.1)
+            time.sleep(6)
 
-    def framesBuilder(self, sort_f, array=[], startColumn=0):
+    def framesBuilder(self, sort_f):
         self.display.fill(colors[0])
 
         print("Construindo quadros...")
 
         y, w = 80, self.frameUnit
-        x_list, x_1_list = [], []
 
         limit_x = int((self.resolution[0] / 2) / self.frameUnit)
         limit_y = int((self.resolution[1] - 60) / self.frameUnit)
@@ -114,14 +128,6 @@ class Sort:
             x_1 = 560
 
             for i in range(1, limit_x - 1):
-                # Linhas da Esquerda
-                self.drawLine(colors[1], (x, y), (x, y + w))
-                self.drawLine(colors[1], (x_1, y), (x_1, y + w))
-
-                # Linhas do Topo
-                self.drawLine(colors[1], (x, y), (x + w, y))
-                self.drawLine(colors[1], (x_1, y), (x_1 + w, y))
-
                 # Linhas de Baixo
                 self.drawLine(colors[1], (x, y + w), (x + w, y + w))
                 self.drawLine(colors[1], (x_1, y + w), (x_1 + w, y + w))
@@ -130,9 +136,18 @@ class Sort:
                 self.drawLine(colors[1], (x + w, y), (x + w, y + w))
                 self.drawLine(colors[1], (x_1 + w, y), (x_1 + w, y + w))
 
+                if x == 20:
+                    # Linhas da Esquerda
+                    self.drawLine(colors[1], (x, y), (x, y + w))
+                    self.drawLine(colors[1], (x_1, y), (x_1, y + w))
+
                 if y == 80:
-                    x_list.append(x)
-                    x_1_list.append(x_1)
+                    # Linhas do Topo
+                    self.drawLine(colors[1], (x, y), (x + w, y))
+                    self.drawLine(colors[1], (x_1, y), (x_1 + w, y))
+
+                    self.x_list.append(x)
+                    self.x_1_list.append(x_1)
 
                 if not sort_f:
                     pygame.display.update()
@@ -142,12 +157,10 @@ class Sort:
 
             y = y + self.frameUnit
 
-        endY = y
+        self.endY = y
 
         if not sort_f:
             pygame.display.update()
-
-        self.populateFrames(sort_f, startColumn, array, x_list, endY, x_1_list)
 
     def sortPage(self):
         print("Criando lista de números aleatórios...")
@@ -163,22 +176,24 @@ class Sort:
         sort_f = 0
         self.framesBuilder(sort_f)
 
+        print("Iniciando apresentações da lista...")
+        self.populateFrames(sort_f)
+
         print("Iniciando mergesort...")
         self.mergesort(self.array)
 
         while 1:
-            a=1
+            a = 1
 
     def principal(self):
         running = True
-        showInitialPage = False  # True
+        # showInitialPage = True
 
         while running:
             self.display.fill(colors[0])
 
-            if showInitialPage:
-                print("a")
-                # self.initialPage()
+            # if showInitialPage:
+            # self.initialPage()
 
             print("Acessando tela de ordenações...")
             self.sortPage()
