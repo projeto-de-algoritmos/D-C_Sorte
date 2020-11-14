@@ -53,9 +53,12 @@ class Sort:
             k += 1
 
     def mergesort(self, array, startColumn=0):
+        print("Aplicando mergesort...")
+
         if len(array) > 1:
+            # sort_f = 1
+            # Visualização de metade com mais de um componente
             self.populateFrames(1, array, startColumn)
-            pygame.display.update()
 
             middleListId = int(len(array)/2)
 
@@ -67,19 +70,26 @@ class Sort:
 
             startColumn_1 = startColumn + middleListId
             halfs = (firstHalf, secondHalf)
+
+            # sort_f = 3
+            # Visualização de metades que serão mergeadas
             self.populateFrames(3, halfs, startColumn, startColumn_1)
 
             self.merge(firstHalf, secondHalf, array)
 
             before = self.orderedList[:startColumn]
-            after = self.orderedList[startColumn+len(array):]
+            after = self.orderedList[startColumn + len(array):]
             self.orderedList = before + array + after
 
             self.populateFrames(3, halfs, startColumn, startColumn_1)
+
+            # sort_f = 4
+            # Visualização merge de metades ordenado
             self.populateFrames(4)
         else:
+            # sort_f = 2
+            # Visualização de metade com um componente
             self.populateFrames(2, array, startColumn)
-            pygame.display.update()
 
     def populateFrames(self, sort_f, array=[], startColumn=0, startColumn_1=0):
         print("Apresentando a lista nos quadros...")
@@ -220,10 +230,10 @@ class Sort:
         sort_f = 0
         self.framesBuilder(sort_f)
 
-        ###
         print("Iniciando apresentações da lista...")
         self.populateFrames(sort_f)
 
+        ###
         print("Iniciando mergesort...")
         self.mergesort(self.list)
 
