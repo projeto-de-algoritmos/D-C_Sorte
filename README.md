@@ -28,30 +28,49 @@ São utilizados dois gráficos. No final da execução, um (da esquerda) mostrar
 
 ## Screenshots
 ### Construção dos Gráficos
-![Construção dos Gráficos](./static/s_build_list.png)
+![Construção dos Gráficos](./assets/media/s_build_list.png)
 
 ### Tela Inicial
-![Tela Inicial](./static/s_home_page.png)
+![Tela Inicial](./assets/media/s_home_page.png)
 
 ### Metade com 1 Componente
-![Metade 01](./static/s_half_01.png)
+![Metade 01](./assets/media/s_half_01.png)
 
 ### Metade com +1 Componente
-![Metade 0X](./static/s_half_0X.png)
+![Metade 0X](./assets/media/s_half_0X.png)
 
 ### Visualização de Metades
-![Metades](./static/s_halfs.png)
+![Metades](./assets/media/s_halfs.png)
 
 ### Visualização União Metades
-![União Metades](./static/s_merge.png)
+![União Metades](./assets/media/s_merge.png)
 
 ### Visualização Resultado
-![Resultado](./static/s_ordered_list.png)
+![Resultado](./assets/media/s_ordered_list.png)
 
 ## Instalação 
-**Linguagem**: xxxxxx<br>
-**Framework**: (caso exista)<br>
-Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
+**Linguagem**: Python3<br>
+
+É necessário possuir o sistema de gerenciamento de pacotes **pip3**.
+
+Se não possuir, no Ubuntu, rode o seguinte comando no terminal:
+
+```
+sudo apt-get install python3-pip
+```
 
 ## Uso 
-Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
+
+No terminal, primeiro instale os requisitos do projeto e depois execute o arquivo principal.
+
+### Instalação dos requisitos
+
+```
+make install
+```
+
+### Execução do projeto
+
+```
+make run
+```
