@@ -18,6 +18,8 @@ class Sort:
         self.resolution = resolution
         self.display = display
 
+        self.running = True
+
         self.list = []
         self.orderedList = []
         self.unorderedList = []
@@ -32,6 +34,8 @@ class Sort:
         pygame.draw.line(self.display, color, initialPosition, endPosition)
 
     def merge(self, firstHalf, secondHalf, array):
+        print("Realizando merge...")
+
         i, j, k = 0, 0, 0
         while i < len(firstHalf) and j < len(secondHalf):
             if firstHalf[i] < secondHalf[j]:
@@ -233,22 +237,42 @@ class Sort:
         print("Iniciando apresentações da lista...")
         self.populateFrames(sort_f)
 
+        aux = 0
+        started = False
+        while not started:
+            if not aux:
+                textFont = pygame.font.Font(
+                    './assets/fonts/Roboto-Bold.ttf', 17
+                )
+                numberStepsTitle = textFont.render(
+                    'Clique na tela para iniciar a ordenação.', True, colors[1]
+                )
+                numberStepsTitleArea = numberStepsTitle.get_rect()
+                numberStepsTitleArea.center = (
+                    20+int(numberStepsTitle.get_width()/2),
+                    20+int(numberStepsTitle.get_height()/2)
+                )
+                self.display.blit(numberStepsTitle, numberStepsTitleArea)
+                pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    started = True
+
+            aux += 1
+
         print("Iniciando mergesort...")
         self.mergesort(self.list)
 
-        ###
-        while 1:
-            a = 1
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
 
     def principal(self):
-        running = True
-        # showInitialPage = True
 
-        while running:
+        while self.running:
             self.display.fill(colors[0])
-
-            # if showInitialPage:
-            # self.initialPage()
 
             print("Acessando tela de ordenações...")
             self.sortPage()
