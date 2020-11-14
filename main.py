@@ -6,6 +6,7 @@ colors = (
     (0, 0, 0),  # Preto
     (255, 255, 255),  # Branco
     (0, 0, 255),  # Azul
+
     (255, 40, 0),  # Vermelho
     (0, 255, 0),  # Verde
     (240, 230, 140)  # Amarelo Khaki
@@ -16,24 +17,44 @@ class Sort:
     def __init__(self, resolution, display):
         self.resolution = resolution
         self.display = display
+
+        self.list = []
+        self.orderedList = []
+        self.unorderedList = []
+
         self.frameUnit = 20
 
         self.x_list = []
         self.x_1_list = []
         self.endY = 0
 
-        self.array = []
-        self.mergesortArray = []
-        self.bruteForceSortArray = []
-
     def drawLine(self, color, initialPosition, endPosition):
         pygame.draw.line(self.display, color, initialPosition, endPosition)
+
+    def merge(self, firstHalf, secondHalf, array):
+        i, j, k = 0, 0, 0
+        while i < len(firstHalf) and j < len(secondHalf):
+            if firstHalf[i] < secondHalf[j]:
+                array[k] = firstHalf[i]
+                i += 1
+            else:
+                array[k] = secondHalf[j]
+                j += 1
+            k += 1
+
+        while i < len(firstHalf):
+            array[k] = firstHalf[i]
+            i += 1
+            k += 1
+
+        while j < len(secondHalf):
+            array[k] = secondHalf[j]
+            j += 1
+            k += 1
 
     def mergesort(self, array, startColumn=0):
         if len(array) > 1:
             middleListId = int(len(array)/2)
-
-            self.populateFrames(1, array, startColumn)
 
             firstHalf = array[:middleListId]
             secondHalf = array[middleListId:]
@@ -41,25 +62,18 @@ class Sort:
             self.mergesort(firstHalf, startColumn)
             self.mergesort(secondHalf, startColumn+middleListId)
 
-            i, j, k = 0, 0, 0
-            while i < len(firstHalf) and j < len(secondHalf):
-                if firstHalf[i] < secondHalf[j]:
-                    array[k] = firstHalf[i]
-                    i += 1
-                else:
-                    array[k] = secondHalf[j]
-                    j += 1
-                k += 1
+            self.merge(firstHalf, secondHalf, array)
 
-            while i < len(firstHalf):
-                array[k] = firstHalf[i]
-                i += 1
-                k += 1
-
-            while j < len(secondHalf):
-                array[k] = secondHalf[j]
-                j += 1
-                k += 1
+            print(self.orderedList)
+            before = self.orderedList[:startColumn]
+            after = self.orderedList[startColumn+len(array):]
+            self.orderedList = before + array + after
+            print(self.orderedList)
+            print(self.list)
+            self.populateFrames(1, array, startColumn)
+        else:
+            self.populateFrames(1, array, startColumn)
+            pygame.display.update()
 
     def populateFrames(self, sort_f, array=[], startColumn=0):
         print("Apresentando a lista nos quadros...")
@@ -68,8 +82,9 @@ class Sort:
 
         if not sort_f or sort_f == 1:
             j = 0
+            j_1 = 0
 
-            for i in self.array:
+            for i in self.unorderedList:
                 pygame.draw.rect(
                     self.display, colors[2],
                     (
@@ -82,10 +97,13 @@ class Sort:
                     time.sleep(0.05)
                     pygame.display.update()
 
+                j = j + 1
+
+            for i in self.orderedList:
                 pygame.draw.rect(
                     self.display, colors[2],
                     (
-                        self.x_1_list[j] + 1, self.endY - i * 20 + 1,
+                        self.x_1_list[j_1] + 1, self.endY - i * 20 + 1,
                         19, (i * 20) - 1
                     )
                 )
@@ -94,7 +112,7 @@ class Sort:
                     time.sleep(0.05)
                     pygame.display.update()
 
-                j = j + 1
+                j_1 = j_1 + 1
 
         if sort_f == 1:
             j = startColumn
@@ -111,7 +129,7 @@ class Sort:
                 j = j + 1
 
             pygame.display.update()
-            time.sleep(6)
+            time.sleep(0.6)
 
     def framesBuilder(self, sort_f):
         self.display.fill(colors[0])
@@ -165,10 +183,10 @@ class Sort:
     def sortPage(self):
         print("Criando lista de números aleatórios...")
         options = [i + 1 for i in range(25)]
-        self.array = [random.choice(options) for i in range(25)]
 
-        self.mergesortArray = self.array
-        self.bruteForceSortArray = self.array
+        self.list = [random.choice(options) for i in range(25)]
+        self.orderedList = self.list.copy()
+        self.unorderedList = self.list.copy()
 
         print("Iniciando construção de quadros de dados...")
 
@@ -180,8 +198,9 @@ class Sort:
         self.populateFrames(sort_f)
 
         print("Iniciando mergesort...")
-        self.mergesort(self.array)
+        self.mergesort(self.list)
 
+        ###
         while 1:
             a = 1
 
