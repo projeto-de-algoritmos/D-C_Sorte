@@ -233,7 +233,6 @@ class Sort:
         print("Iniciando apresentações da lista...")
         self.populateFrames(sort_f)
 
-        ###
         print("Iniciando mergesort...")
         self.mergesort(self.list)
 
@@ -264,8 +263,8 @@ def main():
 
     pygame.display.set_caption("Sorte")
 
-    # icon = pygame.image.load("./assets/media/icon.png")
-    # pygame.display.set_icon(icon)
+    icon = pygame.image.load("./assets/media/icon.png")
+    pygame.display.set_icon(icon)
 
     display = pygame.display.set_mode(resolution)
     newSort = Sort(resolution, display)
