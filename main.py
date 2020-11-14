@@ -5,11 +5,11 @@ import time
 colors = (
     (0, 0, 0),  # Preto
     (255, 255, 255),  # Branco
-    (0, 0, 255),  # Azul
+    (0, 39, 118),  # Azul
+    (255, 223, 0),  # Amarelo
+    (0, 156, 59),  # Verde
 
-    (255, 40, 0),  # Vermelho
-    (0, 255, 0),  # Verde
-    (240, 230, 140)  # Amarelo Khaki
+    (255, 40, 0)  # Vermelho
 )
 
 
@@ -54,6 +54,9 @@ class Sort:
 
     def mergesort(self, array, startColumn=0):
         if len(array) > 1:
+            self.populateFrames(1, array, startColumn)
+            pygame.display.update()
+
             middleListId = int(len(array)/2)
 
             firstHalf = array[:middleListId]
@@ -64,15 +67,14 @@ class Sort:
 
             self.merge(firstHalf, secondHalf, array)
 
-            print(self.orderedList)
+
             before = self.orderedList[:startColumn]
             after = self.orderedList[startColumn+len(array):]
             self.orderedList = before + array + after
-            print(self.orderedList)
-            print(self.list)
+
             self.populateFrames(1, array, startColumn)
         else:
-            self.populateFrames(1, array, startColumn)
+            self.populateFrames(2, array, startColumn)
             pygame.display.update()
 
     def populateFrames(self, sort_f, array=[], startColumn=0):
@@ -80,46 +82,40 @@ class Sort:
 
         self.framesBuilder(sort_f if sort_f else sort_f + 1)
 
-        if not sort_f or sort_f == 1:
-            j = 0
-            j_1 = 0
+        j = 0
+        j_1 = 0
 
-            for i in self.unorderedList:
-                pygame.draw.rect(
-                    self.display, colors[2],
-                    (
-                        self.x_list[j] + 1, self.endY - i * 20 + 1,
-                        19, (i * 20) - 1
-                    )
+        for i in self.unorderedList:
+            pygame.draw.rect(
+                self.display, colors[2],
+                (self.x_list[j] + 1, self.endY - i * 20 + 1, 19, (i * 20) - 1)
+            )
+
+            if not sort_f:
+                time.sleep(0.05)
+                pygame.display.update()
+
+            j = j + 1
+
+        for i in self.orderedList:
+            pygame.draw.rect(
+                self.display, colors[2],
+                (self.x_1_list[j_1] + 1, self.endY - i * 20 + 1, 19, (i * 20) - 1)
                 )
 
-                if not sort_f:
-                    time.sleep(0.05)
-                    pygame.display.update()
+            if not sort_f:
+                time.sleep(0.05)
+                pygame.display.update()
 
-                j = j + 1
+            j_1 = j_1 + 1
 
-            for i in self.orderedList:
-                pygame.draw.rect(
-                    self.display, colors[2],
-                    (
-                        self.x_1_list[j_1] + 1, self.endY - i * 20 + 1,
-                        19, (i * 20) - 1
-                    )
-                )
-
-                if not sort_f:
-                    time.sleep(0.05)
-                    pygame.display.update()
-
-                j_1 = j_1 + 1
-
-        if sort_f == 1:
+        if sort_f:
             j = startColumn
 
+            color = colors[3] if sort_f == 1 else colors[4]
             for i in array:
                 pygame.draw.rect(
-                    self.display, colors[3],
+                    self.display, color,
                     (
                         self.x_list[j] + 1, self.endY - i * 20 + 1,
                         19, (i * 20) - 1
