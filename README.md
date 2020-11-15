@@ -48,6 +48,11 @@ São utilizados dois gráficos. No final da execução, um (da esquerda) mostrar
 ### Visualização Resultado
 ![Resultado](./assets/media/s_ordered_list.png)
 
+### Vídeo
+![Vídeo](./assets/media/video.gif)
+
+**[Video MP4](./assets/media/video.mp4)**
+
 ## Instalação 
 **Linguagem**: Python3<br>
 
